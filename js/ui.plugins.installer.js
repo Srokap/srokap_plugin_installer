@@ -41,7 +41,8 @@ elgg.ui.plugins.installer.init = function() {
 		var $loader = elgg.ui.plugins.installer.getLoader();
 		$(this).replaceWith($loader);
 		elgg.ui.plugins.installer.getResults(data, function(err, data){
-			$loader.replaceWith(data);
+			//button is wrapped with div
+			$loader.parent().replaceWith(data);
 		});
 		return false;
 	});
