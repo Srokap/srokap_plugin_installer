@@ -1,24 +1,47 @@
 elgg.provide('elgg.ui.plugins.installer');
 
 elgg.ui.plugins.installer.init = function() {
+	var repF = elgg.ui.plugins.installer.replaceResults;
+	
+	//autocomplete text input
 	$('.elgg-form-plugins-install-search input[name="q"][type="text"]').autocomplete({
 		delay: 1000,
 		source: function(request, response) {
-			elgg.ui.plugins.installer.search(request.term, function(err, res){
+			elgg.ui.plugins.installer.search({q:request.term}, function(err, data){
+				repF(data);
 				response([]);
 			});
 		}
 	});
+	//block normal submit and run via ajax
 	$('.elgg-form-plugins-install-search').submit(function(evt){
 		var q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
-		elgg.ui.plugins.installer.search(q, function(){});
+		elgg.ui.plugins.installer.search({}, function(err, data){
+			repF(data);
+		});
 		return false;
 	});
+	//run search on sort change
 	$('.elgg-form-plugins-install-search select[name="sort"]').change(function(){
 		var q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
-		elgg.ui.plugins.installer.search(q, function(){});
+		elgg.ui.plugins.installer.search({}, function(err, data){
+			repF(data);
+		});
 	});
 	
+	//load and append next pages of results
+	$('.list-load-more').live('click', function(){
+		var data = $(this).data('params') || {};
+		data.no_stats = true;
+		var $loader = elgg.ui.plugins.installer.getLoader();
+		$(this).replaceWith($loader);
+		elgg.ui.plugins.installer.getResults(data, function(err, data){
+			$loader.replaceWith(data);
+		});
+		return false;
+	});
+	
+	//load and insert plugin details
 	$('.plugin-show-details').live('click', function(){
 		var $self = $(this);
 		
@@ -43,24 +66,39 @@ elgg.ui.plugins.installer.init = function() {
 	});
 }
 
-elgg.ui.plugins.installer.search = function(term, callback) {
-	var $moduleContent = $('#plugins-install-search-results > .elgg-body');
+elgg.ui.plugins.installer.getLoader = function() {
 	var $loader = $('#plugins-install-search-loader').clone();
 	$loader.removeClass('hidden');
-	$moduleContent.html($loader);
-	
-	var sort = $('.elgg-form-plugins-install-search select[name="sort"] option:selected').val();
+	return $loader;
+}
+
+elgg.ui.plugins.installer.replaceResults = function(data) {
+	var $moduleContent = $('#plugins-install-search-results > .elgg-body');
+	$moduleContent.html(data);
+}
+
+elgg.ui.plugins.installer.search = function(data, callback) {
+	elgg.ui.plugins.installer.replaceResults(elgg.ui.plugins.installer.getLoader());
+	elgg.ui.plugins.installer.getResults(data, callback);
+}
+
+elgg.ui.plugins.installer.getResults = function(data, callback) {	
+
+	data = data || {};
+	if (data.q===undefined) {
+		data.q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
+	}
+	if (data.sort===undefined) {
+		data.sort = $('.elgg-form-plugins-install-search select[name="sort"] option:selected').val();
+	}
 	
 	elgg.get('ajax/default/plugins/install/search/results', {
-		data: {
-			q: term,
-			sort: sort
-		},
+		data: data,
 		success: function(data) {
-			$moduleContent.html(data);
+			callback(null, data);
 		},
-		complete: function() {
-			callback(null, true);
+		error: function() {
+			callback("Error loading results");
 		}
 	});
 }
