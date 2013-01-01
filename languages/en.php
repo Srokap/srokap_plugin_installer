@@ -9,7 +9,9 @@ $english = array(
 	'srokap_plugin_installer:created' => 'Created %s',
 	'srokap_plugin_installer:no_description' => '(No description)',
 	'srokap_plugin_installer:possibly_broken' => 'This plugin download page appears to be broken. You may experience problems while downloading.',
-		
+	'srokap_plugin_installer:plugin:details_link' => 'Load details',
+	'srokap_plugin_installer:plugin:details_error' => 'There was error while getting plugin details. Try viewing <a href="%s" target="_blank">plugin page</a> manually.',
+	
 	'action:plugin:download:error:param' => 'Invalid parameter provided',
 	'action:plugin:download:error:no_download_url' => 'Unable to determine download URL for this plugin. Try downloading manually from <a href="%s">community page</a>.',
 	

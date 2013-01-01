@@ -4,6 +4,7 @@ class srokap_plugin_installer {
 		elgg_register_event_handler('pagesetup', 'system', array(__CLASS__, 'pagesetup'));
 		elgg_register_js('ui.plugins.installer', 'mod/'.__CLASS__.'/js/ui.plugins.installer.js');
 		elgg_register_ajax_view('plugins/install/search/results');
+		elgg_register_ajax_view('object/remote_plugin_project/details');
 		elgg_register_action('plugin/download', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/download.php', 'admin');
 	}
 	

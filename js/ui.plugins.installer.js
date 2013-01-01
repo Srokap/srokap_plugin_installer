@@ -18,6 +18,29 @@ elgg.ui.plugins.installer.init = function() {
 		var q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
 		elgg.ui.plugins.installer.search(q, function(){});
 	});
+	
+	$('.plugin-show-details').live('click', function(){
+		var $self = $(this);
+		
+		if (!$self.hasClass('link-clicked')) {
+			var href = $self.data('url');
+			var $loader = $('#plugins-install-search-loader').clone();
+			$loader.removeClass('hidden');
+			
+			$self.replaceWith($loader);
+			$self.addClass('link-clicked');
+			//$(self).replace();
+			elgg.get('ajax/default/object/remote_plugin_project/details', {
+				data: {
+					url: href
+				},
+				success: function(data) {
+					$loader.replaceWith(data);
+				}
+			});
+		}
+		return false;
+	});
 }
 
 elgg.ui.plugins.installer.search = function(term, callback) {

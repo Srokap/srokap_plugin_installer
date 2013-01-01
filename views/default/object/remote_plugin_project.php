@@ -27,6 +27,15 @@ $content .= elgg_view('output/longtext', array(
 	'value' => $entity->description,
 ));
 
+$content .= '<div class="pts">';
+$content .= elgg_view('output/url', array(
+	'href' => '#',
+	'text' => elgg_echo('srokap_plugin_installer:plugin:details_link'),
+	'class' => 'plugin-show-details',
+	'data-url' => $entity->rssGuid,
+));
+$content .= '</div>';
+
 $image_alt .= '<div class="mtm">'.elgg_view('output/url', array(
 	'href' => $entity->getDownloadActionURL(),
 	'text' => elgg_echo('srokap_plugin_installer:download'),
