@@ -16,6 +16,6 @@ echo elgg_view('input/dropdown', array(
 		'created' => elgg_echo('search:sort:by:created'),
 		'updated' => elgg_echo('search:sort:by:updated'),
 	),
-	'value' => get_input('sort', 'relevance'),
+	'value' => get_input('sort', 'created'),
 ));
 echo '</div>';

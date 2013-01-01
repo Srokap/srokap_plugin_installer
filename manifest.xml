@@ -5,7 +5,7 @@
 	<version>1.0</version>
 	<description>Provides plugin search tool and automatic install capabilities.</description>
 	<website>http://srokap.pl/</website>
-	<copyright>(C) Paweł Sroka 2012</copyright>
+	<copyright>(C) Paweł Sroka 2012-2013</copyright>
 	<license>http://opensource.org/licenses/BSD-3-Clause</license>
 	
 	<category>admin</category>

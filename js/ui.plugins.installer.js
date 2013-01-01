@@ -2,6 +2,7 @@ elgg.provide('elgg.ui.plugins.installer');
 
 elgg.ui.plugins.installer.init = function() {
 	$('.elgg-form-plugins-install-search input[name="q"][type="text"]').autocomplete({
+		delay: 1000,
 		source: function(request, response) {
 			elgg.ui.plugins.installer.search(request.term, function(err, res){
 				response([]);
@@ -9,6 +10,8 @@ elgg.ui.plugins.installer.init = function() {
 		}
 	});
 	$('.elgg-form-plugins-install-search').submit(function(evt){
+		var q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
+		elgg.ui.plugins.installer.search(q, function(){});
 		return false;
 	});
 	$('.elgg-form-plugins-install-search select[name="sort"]').change(function(){

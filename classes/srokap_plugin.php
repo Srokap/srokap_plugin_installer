@@ -1,6 +1,10 @@
 <?php
 class srokap_plugin {
 	
+	static function getCommunityPageURL() {
+		return 'http://community.elgg.org/';
+	}
+	
 	/**
 	 * Used to iterate through all community plugins
 	 * @param array $options
@@ -8,8 +12,7 @@ class srokap_plugin {
 	 */
 	static function getPluginProjects($options = array()) {
 // 		$mt = microtime(true);
-		//http://community.elgg.org/search?q=test&entity_subtype=plugin_project&entity_type=object&search_type=entities
-		$url = 'http://community.elgg.org/plugins/search';
+		$url = self::getCommunityPageURL().'plugins/search';
 		$url = elgg_http_add_url_query_elements($url, array(
 			'sort' => 'created',
 			'view' => 'json',
@@ -33,7 +36,7 @@ class srokap_plugin {
 		if (!$query) {
 			$query = '%';
 		}
-		$url = 'http://community.elgg.org/search';
+		$url = self::getCommunityPageURL().'search';
 		$url = elgg_http_add_url_query_elements($url, array(
 			'q' => $query,
 			'sort' => elgg_extract('sort', $options, 'relevance'),
@@ -68,13 +71,16 @@ class srokap_plugin {
 			$result = array();
 			foreach ($channel as $item) {
 // 				var_dump($item->saveXML());
-				$result[] = (object)array(
-					'title' => (string)$item->title,
-					'description' => (string)$item->description,
-					'rssGuid' => (string)$item->guid,
-					'rssLink' => (string)$item->link,
-					'updatedTs' => strtotime($item->pubDate),
-				);
+				$ent = new ElggRemotePluginProject();
+				$ent->loadFromRss($item);
+				$result[] = $ent;
+// 				$result[] = (object)array(
+// 					'title' => (string)$item->title,
+// 					'description' => (string)$item->description,
+// 					'rssGuid' => (string)$item->guid,
+// 					'rssLink' => (string)$item->link,
+// 					'updatedTs' => strtotime($item->pubDate),
+// 				);
 			}
 			return $result;
 		}
