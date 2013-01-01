@@ -29,9 +29,15 @@ class srokap_plugin {
 	 */
 	static function searchPluginProjects($options = array()) {
 // 		$mt = microtime(true);
+		$query = elgg_extract('q', $options, '%');
+		if (!$query) {
+			$query = '%';
+		}
 		$url = 'http://community.elgg.org/search';
 		$url = elgg_http_add_url_query_elements($url, array(
-			'q' => elgg_extract('q', $options, '%'),
+			'q' => $query,
+			'sort' => elgg_extract('sort', $options, 'relevance'),
+			'order' => elgg_extract('order', $options, 'desc'),
 			'entity_type' => 'object',
 			'entity_subtype' => 'plugin_project',
 			'search_type' => 'entities',

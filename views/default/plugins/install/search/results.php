@@ -1,10 +1,14 @@
 <?php
 $query = get_input('q');
+$sort = get_input('sort', 'relevance');
+$order = get_input('order');
 $limit = 20;
 
 $mt = microtime(true);
 $batch = srokap_plugin::getPluginsSearchBatch(array(
 	'q' => $query,
+	'sort' => $sort,
+	'order' => $order,
 ));
 
 $cnt = 0;
@@ -18,12 +22,18 @@ foreach($batch as $plugin) {
 }
 
 echo '<p>';
-echo 'Search query: <strong>'.$query.'</strong><br/>';
-echo 'Time taken: <strong>'.sprintf("%.2f", microtime(true)-$mt).'s</strong>';
+if ($query) {
+	echo elgg_echo('srokap_plugin_installer:search:query', array($query)).'<br/>';
+}
+if ($sort) {
+	echo elgg_echo('srokap_plugin_installer:search:sort', array(elgg_echo('search:sort:by:'.$sort))).'<br/>';
+}
+echo elgg_echo('srokap_plugin_installer:search:time', array(sprintf("%.2f", microtime(true)-$mt)));
 echo '</p>';
 
 if (!$cnt) {
 	echo '<p>'.elgg_echo('notfound').'</p>';
 } else {
+	//TODO better display
 	var_dump($results);
 }
