@@ -4,6 +4,8 @@ $english = array(
 	'admin:plugins:install' => 'Install new plugins',
 	'srokap_plugin_installer:search' => 'Search',
 	'srokap_plugin_installer:search:q:placeholder' => 'Title/Description',
+	'srokap_plugin_installer:search:category' => 'Category',
+	'srokap_plugin_installer:search:category:all' => 'All',
 	'srokap_plugin_installer:results' => 'Results',
 	'srokap_plugin_installer:download' => 'Download',
 	'srokap_plugin_installer:created' => 'Created %s',
@@ -20,9 +22,10 @@ $english = array(
 	'search:sort:by:created' => 'Created time',
 	'search:sort:by:updated' => 'Updated time',
 		
-	'srokap_plugin_installer:search:query' => 'Search query: <strong>%s</strong>',
-	'srokap_plugin_installer:search:sort' => 'Order by: <strong>%s</strong>',
-	'srokap_plugin_installer:search:time' => 'Time taken: <strong>%ss</strong>',
+	'srokap_plugin_installer:search:stats:query' => 'Search query: <strong>%s</strong>',
+	'srokap_plugin_installer:search:stats:category' => 'Category: <strong>%s</strong>',
+	'srokap_plugin_installer:search:stats:sort' => 'Order by: <strong>%s</strong>',
+	'srokap_plugin_installer:search:stats:time' => 'Time taken: <strong>%ss</strong>',
 );
 
 add_translation('en', $english);

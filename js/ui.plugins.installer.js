@@ -3,6 +3,7 @@ elgg.provide('elgg.ui.plugins.installer');
 elgg.ui.plugins.installer.init = function() {
 	var repF = elgg.ui.plugins.installer.replaceResults;
 	
+	//TODO simplify this
 	//autocomplete text input
 	$('.elgg-form-plugins-install-search input[name="q"][type="text"]').autocomplete({
 		delay: 1000,
@@ -15,15 +16,19 @@ elgg.ui.plugins.installer.init = function() {
 	});
 	//block normal submit and run via ajax
 	$('.elgg-form-plugins-install-search').submit(function(evt){
-		var q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
 		elgg.ui.plugins.installer.search({}, function(err, data){
 			repF(data);
 		});
 		return false;
 	});
+	//run search on category change
+	$('.elgg-form-plugins-install-search select[name="category"]').change(function(){
+		elgg.ui.plugins.installer.search({}, function(err, data){
+			repF(data);
+		});
+	});
 	//run search on sort change
 	$('.elgg-form-plugins-install-search select[name="sort"]').change(function(){
-		var q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
 		elgg.ui.plugins.installer.search({}, function(err, data){
 			repF(data);
 		});
@@ -87,6 +92,9 @@ elgg.ui.plugins.installer.getResults = function(data, callback) {
 	data = data || {};
 	if (data.q===undefined) {
 		data.q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
+	}
+	if (data.category===undefined) {
+		data.category = $('.elgg-form-plugins-install-search select[name="category"] option:selected').val();
 	}
 	if (data.sort===undefined) {
 		data.sort = $('.elgg-form-plugins-install-search select[name="sort"] option:selected').val();

@@ -1,6 +1,47 @@
 <?php
 class srokap_plugin {
 	
+	/**
+	 * Returns array of categories as defined in community_plugins. Must be kept up to date.
+	 * Hopefully won't change that often.
+	 * @see https://github.com/Elgg/community_plugins/blob/master/start.php#L122
+	 * @return array
+	 */
+	static function getCategories() {
+		// Defined plugin categories
+		$plugincats = array(
+			'admin' => 'Site admin',
+			'user' => 'User admin',
+			'authentication' => 'Authentication',
+			'tools' => 'Tools',
+			'spam' => 'Spam',
+			'communication' => 'Communication',
+			//'core' => 'Core Enhancements',
+			'events' => 'Events',
+			'media' => 'Media',
+			'photos' => 'Photos and Images',
+			'tpintegrations' => 'Third Party integrations',
+			'clients' => 'Clients',
+			'widgets' => 'Widgets',
+			'games' => 'Games',
+			'ecommerce' => 'eCommerce',
+			'languages' => 'Language packs',
+			'themes' => 'Themes',
+			'misc' => 'Misc',
+			'uncategorized' => 'Uncategorized',
+		);
+		return $plugincats;
+	}
+	
+	/**
+	 * @return array Options for pulldown
+	 */
+	static function getCategoriesOptionsValues() {
+		$options_values = array('' => elgg_echo('srokap_plugin_installer:search:category:all'));
+		$options_values = array_merge((array)$options_values, (array)self::getCategories());
+		return $options_values;
+	}
+	
 	static function getCommunityPageURL() {
 		return 'http://community.elgg.org/';
 	}
@@ -39,6 +80,7 @@ class srokap_plugin {
 		$url = self::getCommunityPageURL().'search';
 		$url = elgg_http_add_url_query_elements($url, array(
 			'q' => $query,
+			'category' => elgg_extract('category', $options, ''),
 			'sort' => elgg_extract('sort', $options, 'relevance'),
 			'order' => elgg_extract('order', $options, 'desc'),
 			'entity_type' => 'object',

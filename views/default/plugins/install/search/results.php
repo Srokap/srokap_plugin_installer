@@ -1,5 +1,6 @@
 <?php
 $query = get_input('q');
+$category = get_input('category', '');
 $sort = get_input('sort', 'created');
 $order = get_input('order');
 $limit = get_input('limit', 10);
@@ -9,6 +10,7 @@ $noStats = get_input('no_stats', false);
 $mt = microtime(true);
 $batch = srokap_plugin::getPluginsSearchBatch(array(
 	'q' => $query,
+	'category' => $category,
 	'sort' => $sort,
 	'order' => $order,
 	'limit' => $limit,
@@ -38,12 +40,17 @@ $time = microtime(true)-$mt;
 if (!$noStats) {
 	echo '<p class="stats">';
 	if ($query) {
-		echo elgg_echo('srokap_plugin_installer:search:query', array($query)).'<br/>';
+		echo elgg_echo('srokap_plugin_installer:search:stats:query', array($query)).'<br/>';
+	}
+	if ($category) {
+		$categories = srokap_plugin::getCategories();
+		$catName = isset($categories[$category]) ? $categories[$category] : $category;
+		echo elgg_echo('srokap_plugin_installer:search:stats:category', array($catName)).'<br/>';
 	}
 	if ($sort) {
-		echo elgg_echo('srokap_plugin_installer:search:sort', array(elgg_echo('search:sort:by:'.$sort))).'<br/>';
+		echo elgg_echo('srokap_plugin_installer:search:stats:sort', array(elgg_echo('search:sort:by:'.$sort))).'<br/>';
 	}
-	echo elgg_echo('srokap_plugin_installer:search:time', array(sprintf("%.2f", $time)));
+	echo elgg_echo('srokap_plugin_installer:search:stats:time', array(sprintf("%.2f", $time)));
 	echo '</p>';
 }
 
