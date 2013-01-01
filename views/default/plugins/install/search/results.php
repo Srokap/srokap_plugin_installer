@@ -1,4 +1,6 @@
 <?php
+admin_gatekeeper();
+
 $query = get_input('q');
 $category = get_input('category', '');
 $sort = get_input('sort', 'created');
