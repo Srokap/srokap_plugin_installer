@@ -64,7 +64,11 @@ elgg.ui.plugins.installer.init = function() {
 					url: href
 				},
 				success: function(data) {
+					data = $(data);
 					$loader.replaceWith(data);
+					$(".elgg-lightbox", data).fancybox({
+						type: 'image'
+					});
 				}
 			});
 		}

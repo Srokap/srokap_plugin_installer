@@ -1,5 +1,7 @@
 <?php
 elgg_load_js('ui.plugins.installer');
+elgg_load_js('lightbox');
+elgg_load_css('lightbox');
 
 $body = elgg_view_form('plugins/install/search', array(
 	'action' => 'admin/plugins/install',
