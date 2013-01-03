@@ -5,7 +5,9 @@ class srokap_plugin_installer {
 		elgg_register_js('ui.plugins.installer', 'mod/'.__CLASS__.'/js/ui.plugins.installer.js');
 		elgg_register_ajax_view('plugins/install/search/results');
 		elgg_register_ajax_view('object/remote_plugin_project/details');
+		elgg_register_ajax_view('object/remote_plugin_project/package/contents');
 		elgg_register_action('plugin/download', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/download.php', 'admin');
+		elgg_register_action('plugin/install', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/install.php', 'admin');
 	}
 	
 	static function pagesetup() {
@@ -17,5 +19,32 @@ class srokap_plugin_installer {
 			'section' => 'configure',
 			'priority' => 100,
 		));
+	}
+	
+	/**
+	 * Path to data folder with trailing slash
+	 * @return string
+	 */
+	static function getDataPath() {
+		static $validated;
+		$path = elgg_get_config('dataroot').'srokap_plugin_installer/';
+		if (!$validated) {
+			if (!self::validatePath($path)) {
+				throw new IOException("Unable to create directory: ".$path);
+			}
+		}
+		return $path;
+	}
+	
+	/**
+	 * @var int chmod mask for data dir
+	 */
+	static $dataPathMod = 0700;
+	
+	/**
+	 * Create dir if not exists and check if all preconditions are correct.
+	 */
+	static function validatePath($path) {
+		return srokap_files::createDir($path, self::$dataPathMod);
 	}
 }

@@ -17,7 +17,7 @@ if ($pos) {
 	$rel = 'thumbnails_'.str_replace('.', '_', microtime(true));
 	$thumbnails = substr($content, $pos, strpos($content, '</ul>', $pos)-$pos+5);
 	$thumbnails = str_replace('<li>', '<li class="elgg-plugin-screenshot prm ptm">', $thumbnails);
-	$thumbnails = str_replace('class="elgg-plugin-screenshot"', 'class="elgg-plugin-screenshot elgg-lightbox" rel="'.$rel.'"', $thumbnails);
+	$thumbnails = str_replace('class="elgg-plugin-screenshot"', 'class="elgg-plugin-screenshot elgg-lightbox-image" rel="'.$rel.'"', $thumbnails);
 }
 
 if ($stats) {

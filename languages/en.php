@@ -8,6 +8,11 @@ $english = array(
 	'srokap_plugin_installer:search:category:all' => 'All',
 	'srokap_plugin_installer:results' => 'Results',
 	'srokap_plugin_installer:download' => 'Download',
+	'srokap_plugin_installer:install' => 'Install',
+	'srokap_plugin_installer:package' => 'Package contents',
+	'srokap_plugin_installer:latest_version' => 'Latest version: <strong>%s</strong>',
+	'srokap_plugin_installer:version' => 'Version: <strong>%s</strong>',
+	'srokap_plugin_installer:unknown' => '(Unknown)',
 	'srokap_plugin_installer:created' => 'Created %s',
 	'srokap_plugin_installer:no_description' => '(No description)',
 	'srokap_plugin_installer:possibly_broken' => 'This plugin download page appears to be broken. You may experience problems while downloading.',
@@ -17,6 +22,8 @@ $english = array(
 	
 	'action:plugin:download:error:param' => 'Invalid parameter provided',
 	'action:plugin:download:error:no_download_url' => 'Unable to determine download URL for this plugin. Try downloading manually from <a href="%s">community page</a>.',
+	'action:plugin:install:ok' => 'Package installed successfully',
+	'action:plugin:install:error:param' => 'Invalid parameter provided',
 	
 	'search:sort:by:relevance' => 'Relevance',
 	'search:sort:by:created' => 'Created time',

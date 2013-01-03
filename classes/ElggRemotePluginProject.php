@@ -6,6 +6,33 @@
 class ElggRemotePluginProject extends ElggObject {
 	
 	/**
+	 * @var int|null cache for plugin project guid
+	 * @see ElggRemotePluginProject::getGUID()
+	 */
+	private $guid;
+	
+	/**
+	 * @var int|null cache for plugin project latest version
+	 * @see ElggRemotePluginProject::getLatestVersion()
+	 */
+	private $version;
+	
+	/**
+	 * Extracts serialized entity from downloaded package.
+	 * @param int $guid
+	 * @param string $version
+	 * @return ElggRemotePluginProject
+	 */
+	static function getByPackage($guid, $version) {
+		$path = self::_getPackageBasePath($guid, $version).'entity';
+		$entity = unserialize(file_get_contents($path));
+		if (!($entity instanceof ElggRemotePluginProject)) {
+			throw new InvalidArgumentException("Unable to find package for parameters: $guid, $version");
+		}
+		return $entity;
+	}
+	
+	/**
 	 * @see ElggObject::initializeAttributes()
 	 */
 	protected function initializeAttributes() {
@@ -23,34 +50,125 @@ class ElggRemotePluginProject extends ElggObject {
 	}
 	
 	/**
-	 * @var int|null cache for plugin project guid
-	 * @see ElggRemotePluginProject::getGUID()
-	 */
-	private $guid;
-	
-	/**
 	 * Careful, this returns REMOTE guid, not local one.
 	 * @return int|bool plugin project guid or false on failure
 	 */
 	public function getGUID() {
-		if ($guid!==null) {
-			return $guid;
+		if ($this->guid!==null) {
+			return $this->guid;
 		}
-		$guid = false;
+		$this->guid = false;
 		if (preg_match('#'.srokap_plugin::getCommunityPageURL().'plugins/([0-9]*)/#', $this->rssGuid, $matches)) {
-			$guid = $matches[1];
+			$this->guid = $matches[1];
 		}
-		return $guid;
+		return $this->guid;
+	}
+	
+	/**
+	 * Extracts latest version from rss url
+	 */
+	public function getLatestVersion() {
+		if ($this->version!==null) {
+			return $this->version;
+		}
+		$this->version = false;
+		if (preg_match('#'.srokap_plugin::getCommunityPageURL().'plugins/[0-9]*/([^/]+)/#', $this->rssGuid, $matches)) {
+			$this->version = $matches[1];
+		}
+		return $this->version;
 	}
 
+	protected static function _getPackageBasePath($guid, $version) {
+		$path = srokap_plugin_installer::getDataPath();
+		return $path.$guid.'/'.$version.'/';
+	}
+	
+	/**
+	 * 
+	 */
+	public function getPackagePath($version = null, $file = '') {
+		$guid = $this->getGUID();
+		if ($version===null) {
+			$version = $this->getLatestVersion();
+		}
+		return self::_getPackageBasePath($guid, $version).$file;
+	}
+	
+	/**
+	 * Download most recent version.
+	 */
+	public function download($version = null) {
+		$url = $this->getDownloadURL();
+		if ($version===null) {
+			$version = $this->getLatestVersion();
+		}
+		$packagePath = $this->getPackagePath($version);
+		srokap_files::createDir($packagePath);
+		
+		$meta = srokap_http::getUrlToFile($url, $packagePath.'package');
+		file_put_contents($packagePath.'version', $this->getLatestVersion());
+		file_put_contents($packagePath.'entity', serialize($this));
+		file_put_contents($packagePath.'metadata', serialize($meta));
+		return $packagePath;
+	}
+	
+	/**
+	 * Verifies if all downloaded files exist
+	 * @param string $version
+	 * @return boolean
+	 */
+	public function isDownloaded($version = null) {
+		if ($version===null) {
+			$version = $this->getLatestVersion();
+		}
+		$packagePath = $this->getPackagePath($version);
+		$files = array('package', 'version', 'entity', 'metadata');
+		if (!is_dir($packagePath)) {
+			return false;
+		}
+		foreach ($files as $file) {
+			if (!is_file($packagePath.$file)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if specified version is currenty installed.
+	 * @param unknown_type $version
+	 */
+	public function isInstalled($version = null) {
+		return false;
+	}
+	
+	/**
+	 * @return string
+	 */
+	private function encodeAsParam() {
+		return $data = base64_encode(serialize($this));
+	}
+	
 	/**
 	 * Determining direct download URL is heavy operation, we delegate it to action.
 	 */
 	public function getDownloadActionURL() {
-		$data = base64_encode(serialize($this));
 		$url = elgg_get_config('wwwroot').'action/plugin/download';
 		$url = elgg_http_add_url_query_elements($url, array(
-			'data' => $data,
+			'data' => $this->encodeAsParam(),
+		));
+		$url = elgg_add_action_tokens_to_url($url);
+		return $url;
+	}
+	
+	/**
+	 * Determining direct install URL is heavy operation, we delegate it to action.
+	 */
+	public function getInstallActionURL() {
+		$data = base64_encode(serialize($this));
+		$url = elgg_get_config('wwwroot').'action/plugin/install';
+		$url = elgg_http_add_url_query_elements($url, array(
+			'data' => $this->encodeAsParam(),
 		));
 		$url = elgg_add_action_tokens_to_url($url);
 		return $url;

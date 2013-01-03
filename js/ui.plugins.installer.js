@@ -66,7 +66,7 @@ elgg.ui.plugins.installer.init = function() {
 				success: function(data) {
 					data = $(data);
 					$loader.replaceWith(data);
-					$(".elgg-lightbox", data).fancybox({
+					$(".elgg-lightbox-image", data).fancybox({
 						type: 'image'
 					});
 				}
@@ -84,6 +84,8 @@ elgg.ui.plugins.installer.getLoader = function() {
 
 elgg.ui.plugins.installer.replaceResults = function(data) {
 	var $moduleContent = $('#plugins-install-search-results > .elgg-body');
+	data = $(data);
+	$(".elgg-lightbox", data).fancybox({});
 	$moduleContent.html(data);
 }
 
