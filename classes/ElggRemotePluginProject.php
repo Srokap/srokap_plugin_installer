@@ -98,6 +98,7 @@ class ElggRemotePluginProject extends ElggObject {
 	 * Download most recent version.
 	 */
 	public function download($version = null) {
+		//TODO error handling
 		$url = $this->getDownloadURL();
 		if ($version===null) {
 			$version = $this->getLatestVersion();
@@ -187,6 +188,16 @@ class ElggRemotePluginProject extends ElggObject {
 				//var_dump($content);
 				if (preg_match('#recommended_release_guid:\s*</b>\s*([0-9]*)#', $content, $matches)) {
 					$result = srokap_plugin::getCommunityPageURL().'plugins/download/'.$matches[1];
+				}
+			}
+			//some releases don't have recommented release set..., see http://community.elgg.org/export/default/835357/
+			//TODO consider replacing whole logic with this case
+			if (!$result) {
+				$content = srokap_http::getUrl($this->getURL());
+				if ($content) {
+					if (preg_match('#'.srokap_plugin::getCommunityPageURL().'plugins/download/([0-9]*)#', $content, $matches)) {
+						$result = srokap_plugin::getCommunityPageURL().'plugins/download/'.$matches[1];
+					}
 				}
 			}
 		}
