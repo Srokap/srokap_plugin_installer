@@ -3,17 +3,21 @@ $data = get_input('data');
 $data = base64_decode($data);
 $entity = unserialize($data);
 
-if ($entity instanceof ElggRemotePluginProject) {
-	$url = $entity->getDownloadURL();
-	if ($url) {
-		forward($url);
+try {
+	if ($entity instanceof ElggRemotePluginProject) {
+		$url = $entity->getDownloadURL();
+		if ($url) {
+			forward($url);
+		} else {
+			//unable to determine download url
+			register_error(elgg_echo('action:plugin:download:error:no_download_url', array($entity->getURL())));
+		}
 	} else {
-		//unable to determine download url
-		register_error(elgg_echo('action:plugin:download:error:no_download_url', array($entity->getURL())));
+		//invalid param
+		register_error(elgg_echo('action:plugin:download:error:param'));
 	}
-} else {
-	//invalid param
-	register_error(elgg_echo('action:plugin:download:error:param'));
+} catch(Exception $e) {
+	register_error($e->getMessage());
 }
 
 forward(REFERER);

@@ -96,10 +96,13 @@ class ElggRemotePluginProject extends ElggObject {
 	
 	/**
 	 * Download most recent version.
+	 * @throws IOException
 	 */
 	public function download($version = null) {
-		//TODO error handling
 		$url = $this->getDownloadURL();
+		if ($url===false) {
+			throw IOException(elgg_echo('action:plugin:download:error:no_download_url', array($this->getURL())));
+		}
 		if ($version===null) {
 			$version = $this->getLatestVersion();
 		}
@@ -107,9 +110,18 @@ class ElggRemotePluginProject extends ElggObject {
 		srokap_files::createDir($packagePath);
 		
 		$meta = srokap_http::getUrlToFile($url, $packagePath.'package');
-		file_put_contents($packagePath.'version', $this->getLatestVersion());
-		file_put_contents($packagePath.'entity', serialize($this));
-		file_put_contents($packagePath.'metadata', serialize($meta));
+		if ($meta===false) {
+			throw IOException("Error while fetching plugin package from: $url");
+		}
+		if (file_put_contents($packagePath.'version', $this->getLatestVersion())===false) {
+			throw IOException("Error while saving version file at: $packagePath");
+		}
+		if (file_put_contents($packagePath.'entity', serialize($this))===false) {
+			throw IOException("Error while saving entity file at: $packagePath");
+		}
+		if (file_put_contents($packagePath.'metadata', serialize($meta))===false) {
+			throw IOException("Error while saving metadata file at: $packagePath");
+		}
 		return $packagePath;
 	}
 	

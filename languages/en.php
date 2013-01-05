@@ -19,6 +19,8 @@ $english = array(
 	'srokap_plugin_installer:plugin:details_link' => 'Load details',
 	'srokap_plugin_installer:plugin:details_error' => 'There was error while getting plugin details. Try viewing <a href="%s" target="_blank">plugin page</a> manually.',
 	'srokap_plugin_installer:search:showmore' => 'Show more',
+		
+	'srokap_plugin_installer:error:cannot_read_package' => 'Cannot read downloaded package from: <strong>%s</strong>',
 	
 	'action:plugin:download:error:param' => 'Invalid parameter provided',
 	'action:plugin:download:error:no_download_url' => 'Unable to determine download URL for this plugin. Try downloading manually from <a href="%s">community page</a>.',
