@@ -73,7 +73,7 @@ class ElggRemotePluginProject extends ElggObject {
 		}
 		$this->version = false;
 		if (preg_match('#'.srokap_plugin::getCommunityPageURL().'plugins/[0-9]*/([^/]+)/#', $this->rssGuid, $matches)) {
-			$this->version = $matches[1];
+			$this->version = urldecode($matches[1]);
 		}
 		return $this->version;
 	}
