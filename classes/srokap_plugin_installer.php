@@ -47,4 +47,37 @@ class srokap_plugin_installer {
 	static function validatePath($path) {
 		return srokap_files::createDir($path, self::$dataPathMod);
 	}
+	
+	/**
+	 * Try to determine possible plugin roots by analyzing required files and additional files.
+	 * @param array $nameIndex name index got from ZPI archive
+	 * @return array|bool array of dir paths sorted by best fit or false if none found 
+	 */
+	static function getPossiblePluginRoots($nameIndex) {
+		$requiredFiles = array('start.php', 'manifest.xml');
+		$additionalFiles = array('activate.php', 'deactivate.xml');
+		$pointsRF = 5; 
+		$pointsAF = 1; 
+		
+		$pointed = array();
+		foreach ($nameIndex as $path) {
+			$filename = basename($path);
+			$path = dirname($path);
+			if (in_array($filename, $requiredFiles)) {
+				$pointed[$path] += $pointsRF;
+			} else if (in_array($filename, $additionalFiles)) {
+				$pointed[$path] += $pointsAF;
+			}
+		}
+		foreach ($pointed as $key => $val) {
+			if ($val<count($requiredFiles)*$pointsRF) {
+				unset($pointed[$key]);
+			}
+		}
+		if (empty($pointed)) {
+			return false;
+		}
+		arsort($pointed);
+		return array_keys($pointed);
+	}
 }

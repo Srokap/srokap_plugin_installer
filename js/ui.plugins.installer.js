@@ -115,7 +115,7 @@ elgg.ui.plugins.installer.search = function(data, callback) {
 elgg.ui.plugins.installer.serializeObject = function(selector, data) {
 	data = data || {};
 	if (data) {
-		//we make this trick to support 
+		//we make this trick to support multivalue fields
 		for (var i in data) {
 			if (typeof data[i] !== 'array') {
 				data[i] = [data[i]];

@@ -31,6 +31,9 @@ $english = array(
 	'search:sort:by:created' => 'Created time',
 	'search:sort:by:updated' => 'Updated time',
 		
+	'srokap_plugin_installer:best_root' => 'Best matching plugin root path: <strong>%s</strong>',
+	'srokap_plugin_installer:no_root' => 'Unable to find valid plugin root in the package.',
+	
 	'srokap_plugin_installer:search:stats:query' => 'Search query: <strong>%s</strong>',
 	'srokap_plugin_installer:search:stats:category' => 'Category: <strong>%s</strong>',
 	'srokap_plugin_installer:search:stats:sort' => 'Order by: <strong>%s</strong>',
