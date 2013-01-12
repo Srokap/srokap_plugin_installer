@@ -98,10 +98,10 @@ class ElggRemotePluginProject extends ElggObject {
 	 * Download most recent version.
 	 * @throws IOException
 	 */
-	public function download($version = null) {
+	public function fetch($version = null) {
 		$url = $this->getDownloadURL();
 		if ($url===false) {
-			throw IOException(elgg_echo('action:plugin:download:error:no_download_url', array($this->getURL())));
+			throw new IOException(elgg_echo('action:plugin:download:error:no_download_url', array($this->getURL())));
 		}
 		if ($version===null) {
 			$version = $this->getLatestVersion();
@@ -111,18 +111,35 @@ class ElggRemotePluginProject extends ElggObject {
 		
 		$meta = srokap_http::getUrlToFile($url, $packagePath.'package');
 		if ($meta===false) {
-			throw IOException("Error while fetching plugin package from: $url");
+			throw new IOException("Error while fetching plugin package from: $url");
 		}
 		if (file_put_contents($packagePath.'version', $this->getLatestVersion())===false) {
-			throw IOException("Error while saving version file at: $packagePath");
+			throw new IOException("Error while saving version file at: $packagePath");
 		}
 		if (file_put_contents($packagePath.'entity', serialize($this))===false) {
-			throw IOException("Error while saving entity file at: $packagePath");
+			throw new IOException("Error while saving entity file at: $packagePath");
 		}
 		if (file_put_contents($packagePath.'metadata', serialize($meta))===false) {
-			throw IOException("Error while saving metadata file at: $packagePath");
+			throw new IOException("Error while saving metadata file at: $packagePath");
 		}
 		return $packagePath;
+	}
+	
+	/**
+	 * @param string $version
+	 * @param string $root
+	 */
+	public function install($version, $root) {
+		$path = $this->getPackagePath($version, 'package');
+		$pluginDir = basename($root);
+		if (strpos($root, '.')!==false) {
+			throw new IOException("Invalid plugin root directory: $root");
+		}
+		$targetDir = elgg_get_config('pluginspath').$pluginDir.'/';
+		if (!srokap_zip::extractByRoot($path, $targetDir, $root)) {
+			throw new IOException("Error while extracting files from archive: $path");
+		}
+		return true;
 	}
 	
 	/**
@@ -214,6 +231,28 @@ class ElggRemotePluginProject extends ElggObject {
 			}
 		}
 		return $result;
+	}
+	
+	/**
+	 * @param string $version
+	 * @param string $packageRoot path to chosen plugin root in the package
+	 * @throws IOException
+	 * @return installation URL
+	 */
+	public function getInstallActionURL($version, $packageRoot) {
+		$guid = $this->getGUID();
+		$path = self::_getPackageBasePath($guid, $version).'entity';
+		if (!file_exists($path)) {
+			throw IOException("Invalid parameter or broken installation package at: $path");
+		}
+		$url = elgg_get_config('wwwroot').'action/plugin/install';
+		$url = elgg_http_add_url_query_elements($url, array(
+			'guid' => $guid,
+			'version' => $version,
+			'root' => $packageRoot,
+		));
+		$url = elgg_add_action_tokens_to_url($url);
+		return $url;
 	}
 	
 	/**

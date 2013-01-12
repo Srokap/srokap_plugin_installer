@@ -4,11 +4,11 @@ $data = base64_decode($data);
 $entity = unserialize($data);
 
 if ($entity instanceof ElggRemotePluginProject) {
-	$entity->download();
-	system_message(elgg_echo('action:plugin:install:ok'));
+	$entity->fetch();
+	system_message(elgg_echo('action:plugin:fetch:ok'));
 } else {
 	//invalid param
-	register_error(elgg_echo('action:plugin:install:error:param'));
+	register_error(elgg_echo('action:plugin:fetch:error:param'));
 }
 
 forward(REFERER);

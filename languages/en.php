@@ -10,6 +10,7 @@ $english = array(
 	'srokap_plugin_installer:download' => 'Download',
 	'srokap_plugin_installer:direct_download' => 'Direct download',
 	'srokap_plugin_installer:install' => 'Install',
+	'srokap_plugin_installer:reinstall' => 'Reinstall',
 	'srokap_plugin_installer:package' => 'Package contents',
 	'srokap_plugin_installer:latest_version' => 'Latest version: <strong>%s</strong>',
 	'srokap_plugin_installer:version' => 'Version: <strong>%s</strong>',
@@ -25,6 +26,8 @@ $english = array(
 	
 	'action:plugin:download:error:param' => 'Invalid parameter provided',
 	'action:plugin:download:error:no_download_url' => 'Unable to determine download URL for this plugin. Try downloading manually from <a href="%s">community page</a>.',
+	'action:plugin:fetch:ok' => 'Package downloaded successfully',
+	'action:plugin:fetch:error:param' => 'Invalid parameter provided',
 	'action:plugin:install:ok' => 'Package installed successfully',
 	'action:plugin:install:error:param' => 'Invalid parameter provided',
 	
@@ -34,6 +37,7 @@ $english = array(
 		
 	'srokap_plugin_installer:best_root' => 'Best matching plugin root path: <strong>%s</strong>',
 	'srokap_plugin_installer:no_root' => 'Unable to find valid plugin root in the package.',
+	'srokap_plugin_installer:confirm:dir_exists' => "Target directory exists, during installation you will LOOSE ALL CONTENT in\n %s directory!\nThis change cannot be undone! Do you really want to proceed?",
 	
 	'srokap_plugin_installer:search:stats:query' => 'Search query: <strong>%s</strong>',
 	'srokap_plugin_installer:search:stats:category' => 'Category: <strong>%s</strong>',

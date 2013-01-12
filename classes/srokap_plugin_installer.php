@@ -9,6 +9,7 @@ class srokap_plugin_installer {
 		elgg_register_ajax_view('object/remote_plugin_project/package/contents');
 		elgg_register_action('plugin/download', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/download.php', 'admin');
 		elgg_register_action('plugin/fetch', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/fetch.php', 'admin');
+		elgg_register_action('plugin/install', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/install.php', 'admin');
 	}
 	
 	static function pagesetup() {
@@ -57,10 +58,11 @@ class srokap_plugin_installer {
 	static function getPossiblePluginRoots($nameIndex) {
 		$requiredFiles = array('start.php', 'manifest.xml');
 		$additionalFiles = array('activate.php', 'deactivate.xml');
-		$pointsRF = 5; 
-		$pointsAF = 1; 
+		$pointsRF = 5;
+		$pointsAF = 1;
 		
 		$pointed = array();
+		//give points for file names occurences
 		foreach ($nameIndex as $path) {
 			$filename = basename($path);
 			$path = dirname($path);
@@ -70,6 +72,7 @@ class srokap_plugin_installer {
 				$pointed[$path] += $pointsAF;
 			}
 		}
+		//filter entries without necessary points
 		foreach ($pointed as $key => $val) {
 			if ($val<count($requiredFiles)*$pointsRF) {
 				unset($pointed[$key]);
@@ -78,6 +81,7 @@ class srokap_plugin_installer {
 		if (empty($pointed)) {
 			return false;
 		}
+		//sort and return paths
 		arsort($pointed);
 		return array_keys($pointed);
 	}

@@ -12,7 +12,29 @@ $possibleRoots = srokap_plugin_installer::getPossiblePluginRoots($contents);
 $body = '<div class="mtm">'.elgg_echo('srokap_plugin_installer:version', array($version)).'</div>';
 
 if ($possibleRoots!==false) {
-	$body .= '<div class="mtm">'.elgg_echo('srokap_plugin_installer:best_root', array($possibleRoots[0])).'</div>';
+	$body .= '<div class="mtm">'.elgg_echo('srokap_plugin_installer:best_root', array($possibleRoots[0])).' ';
+	$targetPath = elgg_get_config('pluginspath').$possibleRoots[0];
+	$dirExists = is_dir($targetPath);
+	try {
+		$url = $entity->getInstallActionURL($version, $possibleRoots[0]);
+		if ($dirExists) {
+			$body .= elgg_view('output/confirmlink', array(
+				'href' => $url,
+				'text' => elgg_echo('srokap_plugin_installer:reinstall'),
+				'class' => 'elgg-button elgg-button-cancel',
+				'confirm' => elgg_echo('srokap_plugin_installer:confirm:dir_exists', array($targetPath)),
+			));
+		} else {
+			$body .= elgg_view('output/url', array(
+				'href' => $url,
+				'text' => elgg_echo('srokap_plugin_installer:install'),
+				'class' => 'elgg-button elgg-button-submit',
+			));
+		}
+	} catch (IOException $e) {
+		//just no output
+	}
+	$body .= '</div>';
 } else {
 	$body .= '<div class="mtm">'.elgg_echo('srokap_plugin_installer:no_root').'</div>';
 }
