@@ -2,35 +2,36 @@ elgg.provide('elgg.ui.plugins.installer');
 
 elgg.ui.plugins.installer.init = function() {
 	var repF = elgg.ui.plugins.installer.replaceResults;
+	var formSelector = '.elgg-form-plugins-install-search';
 	
 	//TODO simplify this
 	//autocomplete text input
-	$('.elgg-form-plugins-install-search input[name="q"][type="text"]').autocomplete({
+	$(formSelector+' input[name="q"][type="text"]').autocomplete({
 		delay: 1000,
 		source: function(request, response) {
-			elgg.ui.plugins.installer.search({q:request.term}, function(err, data){
-				repF(data);
+			elgg.ui.plugins.installer.search({q:request.term}, function(err, data, params){
+				repF(data, params);
 				response([]);
 			});
 		}
 	});
 	//block normal submit and run via ajax
-	$('.elgg-form-plugins-install-search').submit(function(evt){
-		elgg.ui.plugins.installer.search({}, function(err, data){
-			repF(data);
+	$(formSelector).submit(function(evt){
+		elgg.ui.plugins.installer.search({}, function(err, data, params){
+			repF(data, params);
 		});
 		return false;
 	});
 	//run search on category change
-	$('.elgg-form-plugins-install-search select[name="category"]').change(function(){
-		elgg.ui.plugins.installer.search({}, function(err, data){
-			repF(data);
+	$(formSelector+' select[name="category"]').change(function(){
+		elgg.ui.plugins.installer.search({}, function(err, data, params){
+			repF(data, params);
 		});
 	});
 	//run search on sort change
-	$('.elgg-form-plugins-install-search select[name="sort"]').change(function(){
-		elgg.ui.plugins.installer.search({}, function(err, data){
-			repF(data);
+	$(formSelector+' select[name="sort"]').change(function(){
+		elgg.ui.plugins.installer.search({}, function(err, data, params){
+			repF(data, params);
 		});
 	});
 	
@@ -40,9 +41,10 @@ elgg.ui.plugins.installer.init = function() {
 		data.no_stats = true;
 		var $loader = elgg.ui.plugins.installer.getLoader();
 		$(this).replaceWith($loader);
-		elgg.ui.plugins.installer.getResults(data, function(err, data){
+		elgg.ui.plugins.installer.getResults(data, function(err, data, params){
 			//button is wrapped with div
 			$loader.parent().replaceWith(data);
+			//we don't update limit with history.pushState
 		});
 		return false;
 	});
@@ -82,11 +84,22 @@ elgg.ui.plugins.installer.getLoader = function() {
 	return $loader;
 }
 
-elgg.ui.plugins.installer.replaceResults = function(data) {
+elgg.ui.plugins.installer.replaceResults = function(data, params) {
 	var $moduleContent = $('#plugins-install-search-results > .elgg-body');
-	data = $(data);
-	$(".elgg-lightbox", data).fancybox({});
 	$moduleContent.html(data);
+	elgg.ui.plugins.installer.updateLocation(params);
+}
+
+elgg.ui.plugins.installer.updateLocation = function(params) {
+	if (typeof history.pushState === 'function') {
+		params = params || {};
+		var u = URI(window.location.href);
+		if (typeof Object.keys === 'function') {
+			u.removeSearch(Object.keys(params));
+		}
+		u.addSearch(params);
+		history.pushState({}, '', u);
+	}
 }
 
 elgg.ui.plugins.installer.search = function(data, callback) {
@@ -94,23 +107,48 @@ elgg.ui.plugins.installer.search = function(data, callback) {
 	elgg.ui.plugins.installer.getResults(data, callback);
 }
 
-elgg.ui.plugins.installer.getResults = function(data, callback) {	
-
+/**
+ * Serializes form data into key-value object as opposite to $.serialize
+ * @see jQuery.serilize
+ * @return {Object}
+ */
+elgg.ui.plugins.installer.serializeObject = function(selector, data) {
 	data = data || {};
-	if (data.q===undefined) {
-		data.q = $('.elgg-form-plugins-install-search input[name="q"][type="text"]').val();
+	if (data) {
+		//we make this trick to support 
+		for (var i in data) {
+			if (typeof data[i] !== 'array') {
+				data[i] = [data[i]];
+			}
+		}
+	} else {
+		data = {};
 	}
-	if (data.category===undefined) {
-		data.category = $('.elgg-form-plugins-install-search select[name="category"] option:selected').val();
+	var a = $(selector).serializeArray()
+	for (var i in a) {
+		var key = a[i].name;
+		if (data.key===undefined) {
+			data[key] = [];
+		}
+		data[key].push(a[i].value);
 	}
-	if (data.sort===undefined) {
-		data.sort = $('.elgg-form-plugins-install-search select[name="sort"] option:selected').val();
+	//make single values into non-arrays
+	for (var i in data) {
+		if (data[i].length==1) {
+			data[i] = data[i][0];
+		}
 	}
-	
+	return data;
+}
+
+elgg.ui.plugins.installer.getResults = function(data, callback) {
+	var params = elgg.ui.plugins.installer.serializeObject('.elgg-form-plugins-install-search', data);
 	elgg.get('ajax/default/plugins/install/search/results', {
-		data: data,
+		data: params,
 		success: function(data) {
-			callback(null, data);
+			data = $(data);
+			$(".elgg-lightbox", data).fancybox({});
+			callback(null, data, params);
 		},
 		error: function() {
 			callback("Error loading results");
