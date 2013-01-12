@@ -8,6 +8,7 @@ $english = array(
 	'srokap_plugin_installer:search:category:all' => 'All',
 	'srokap_plugin_installer:results' => 'Results',
 	'srokap_plugin_installer:download' => 'Download',
+	'srokap_plugin_installer:direct_download' => 'Direct download',
 	'srokap_plugin_installer:install' => 'Install',
 	'srokap_plugin_installer:package' => 'Package contents',
 	'srokap_plugin_installer:latest_version' => 'Latest version: <strong>%s</strong>',

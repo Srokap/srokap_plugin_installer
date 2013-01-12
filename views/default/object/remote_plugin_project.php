@@ -53,14 +53,14 @@ $content .= '</div>';
  */
 $image_alt = '';
 $image_alt .= '<div class="mtm">'.elgg_view('output/url', array(
-	'href' => $entity->getDownloadActionURL(),
+	'href' => $entity->getFetchActionURL(),
 	'text' => elgg_echo('srokap_plugin_installer:download'),
-	'class' => 'elgg-button elgg-button-submit',
-)).'</div>';
-$image_alt .= '<div class="mtm">'.elgg_view('output/url', array(
-	'href' => $entity->getInstallActionURL(),
-	'text' => elgg_echo('srokap_plugin_installer:install'),
 	'class' => 'elgg-button '.($isDownloaded?'elgg-button-cancel':'elgg-button-submit'),
+)).'</div>';
+$image_alt .= '<div class="mts">'.elgg_view('output/url', array(
+	'href' => $entity->getDownloadActionURL(),
+	'text' => elgg_echo('srokap_plugin_installer:direct_download'),
+// 	'class' => 'elgg-button',
 )).'</div>';
 if ($isDownloaded) {
 	$url = elgg_get_config('wwwroot').'ajax/default/object/remote_plugin_project/package/contents/';
@@ -74,7 +74,6 @@ if ($isDownloaded) {
 		'class' => 'elgg-button elgg-button-submit elgg-lightbox',
 	)).'</div>';
 }
-
 
 $params = array(
 	'entity' => $entity,
@@ -90,5 +89,5 @@ $body = elgg_view('object/elements/summary', $params);
 // $vars['image'] = $icon;
 $vars['body'] = $body;
 $vars['image_alt'] = $image_alt;
-$vars['class'] = 'elgg-plugin elgg-state-active';
+$vars['class'] = 'elgg-plugin srokap-plugin-installer elgg-state-active';
 echo elgg_view('page/components/image_block', $vars);

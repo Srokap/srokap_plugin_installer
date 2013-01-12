@@ -177,9 +177,9 @@ class ElggRemotePluginProject extends ElggObject {
 	/**
 	 * Determining direct install URL is heavy operation, we delegate it to action.
 	 */
-	public function getInstallActionURL() {
+	public function getFetchActionURL() {
 		$data = base64_encode(serialize($this));
-		$url = elgg_get_config('wwwroot').'action/plugin/install';
+		$url = elgg_get_config('wwwroot').'action/plugin/fetch';
 		$url = elgg_http_add_url_query_elements($url, array(
 			'data' => $this->encodeAsParam(),
 		));

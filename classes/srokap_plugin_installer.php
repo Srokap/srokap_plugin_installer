@@ -3,11 +3,12 @@ class srokap_plugin_installer {
 	static function init() {
 		elgg_register_event_handler('pagesetup', 'system', array(__CLASS__, 'pagesetup'));
 		elgg_register_js('ui.plugins.installer', 'mod/'.__CLASS__.'/js/ui.plugins.installer.js');
+		elgg_extend_view('css/admin', 'css/srokap_plugin_installer');
 		elgg_register_ajax_view('plugins/install/search/results');
 		elgg_register_ajax_view('object/remote_plugin_project/details');
 		elgg_register_ajax_view('object/remote_plugin_project/package/contents');
 		elgg_register_action('plugin/download', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/download.php', 'admin');
-		elgg_register_action('plugin/install', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/install.php', 'admin');
+		elgg_register_action('plugin/fetch', elgg_get_config('path').'mod/srokap_plugin_installer/actions/plugin/fetch.php', 'admin');
 	}
 	
 	static function pagesetup() {
