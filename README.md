@@ -28,9 +28,9 @@ Wish list
 Would be nice to have, but not focusing on it yet:
 * Implement dedicated [community plugins](https://github.com/Srokap/community_plugins) search REST API
 * Support for different sources of plugins
-** Install from FTP
-** Install from Github
-** Manual upload (see. [plugin-installer](http://community.elgg.org/plugins/835357/2.1/plugin-installer))
+  * Install from FTP
+  * Install from Github
+  * Manual upload (see. [plugin-installer](http://community.elgg.org/plugins/835357/2.1/plugin-installer))
 * Consider ways of applying changes without valid plugin root (ie. language packs)
 * Managing history of installations (reverting plugin install?)
 * Deep package file contents inspection (viewing particular files before installation)
