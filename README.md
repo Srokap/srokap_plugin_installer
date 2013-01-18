@@ -3,7 +3,8 @@ srokap_plugin_installer
 
 Plugin to search and instantly install plugins got from community.elgg.org (maybe other sources in future).
 
-== Features ==
+Features
+--------
 * AJAX search for plugins from [community.elgg.org](http://community.elgg.org) in admin panel
 * Viewing basic plugin details (with thumbnails) without going to community page
 * Download to Elgg installation link
@@ -11,7 +12,8 @@ Plugin to search and instantly install plugins got from community.elgg.org (mayb
 * Installation of plugins from downloaded packages with one click
 * Basic packages contents inspection (list of all files)
 
-== TODOs ==
+TODOs
+-----
 These are near future priorities to implement:
 * "Install & Enable" button
 * Install to dataroot (when not having write permissins to wwwroot)
@@ -21,7 +23,8 @@ These are near future priorities to implement:
 * Invalid plugin detection and disabling (avoid crashing admin panel with bad plugins)
 * Download plugin packages downloaded to server
 
-== Wish list ==
+Wish list
+---------
 Would be nice to have, but not focusing on it yet:
 * Implement dedicated [community plugins](https://github.com/Srokap/community_plugins) search REST API
 * Support for different sources of plugins
