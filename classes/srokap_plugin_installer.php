@@ -85,4 +85,24 @@ class srokap_plugin_installer {
 		arsort($pointed);
 		return array_keys($pointed);
 	}
+	
+	static function getFtpConnection() {
+		try {
+			$options = array(
+				'host' => elgg_get_plugin_setting('ftp_host', __CLASS__),
+				'port' => elgg_get_plugin_setting('ftp_port', __CLASS__),
+				'username' => elgg_get_plugin_setting('ftp_username', __CLASS__),
+				'password' => elgg_get_plugin_setting('ftp_password', __CLASS__),
+				'secure' => elgg_get_plugin_setting('ftp_secure', __CLASS__),
+			);
+			$timeout = elgg_get_plugin_setting('ftp_timeout', __CLASS__);
+			if ($timeout) {
+				$options['timeout'] = $timeout;
+			}
+			$ftp = new FtpConnection($options);
+			return $ftp;
+		} catch(RuntimeException $e) {
+			return false;
+		}
+	}
 }

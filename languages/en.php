@@ -21,7 +21,23 @@ $english = array(
 	'srokap_plugin_installer:plugin:details_link' => 'Load details',
 	'srokap_plugin_installer:plugin:details_error' => 'There was error while getting plugin details. Try viewing <a href="%s" target="_blank">plugin page</a> manually.',
 	'srokap_plugin_installer:search:showmore' => 'Show more',
-		
+	'srokap_plugin_installer:time_taken' => 'Time taken: %.3fs',
+	
+	'srokap_plugin_installer:ftp:connection' => 'FTP connection',
+	'srokap_plugin_installer:ftp:connection:ok' => 'Connection successfull. Detected system type: %s',
+	'srokap_plugin_installer:ftp:connection:fail' => 'Connection to host failed',
+	'srokap_plugin_installer:ftp:connection:fail:login' => 'Login failed',
+	'srokap_plugin_installer:ftp:no_module' => 'FTP module appears to be missing',
+	
+	'srokap_plugin_installer:settings:ftp' => 'FTP settings',
+	'srokap_plugin_installer:settings:ftp_host' => 'Host',
+	'srokap_plugin_installer:settings:ftp_port' => 'Port',
+	'srokap_plugin_installer:settings:ftp_username' => 'Username',
+	'srokap_plugin_installer:settings:ftp_password' => 'Password',
+	'srokap_plugin_installer:settings:ftp_timeout' => 'Timeout in seconds',
+	'srokap_plugin_installer:settings:ftp_secure' => 'SSL connection (NOT SFTP!)',
+	'srokap_plugin_installer:settings:ftp_secure:description' => 'This option is only available if both the ftp module and the OpenSSL support is built statically into php, this means that on Windows this function will be undefined in the official PHP builds. To make this function available on Windows you must compile your own PHP binaries.',
+	
 	'srokap_plugin_installer:error:cannot_read_package' => 'Cannot read downloaded package from: <strong>%s</strong>',
 	
 	'action:plugin:download:error:param' => 'Invalid parameter provided',
