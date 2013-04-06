@@ -2,7 +2,11 @@
 elgg_load_js('ui.plugins.installer');
 elgg_load_js('lightbox');
 elgg_load_css('lightbox');
-elgg_load_js('uri.js');
+if (function_exists('elgg_require_js')) {
+	elgg_require_js('uri.js');
+} else {
+	elgg_load_js('uri.js');
+}
 		
 $body = elgg_view_form('plugins/install/search', array(
 	'action' => 'admin/plugins/install',

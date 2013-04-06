@@ -25,4 +25,13 @@
 		<name>SimpleXML</name>
 	</requires>
 
+	<requires>
+		<type>php_extension</type>
+		<name>ftp</name>
+	</requires>
+
+	<conflicts>
+		<type>elgg_release</type>
+		<version>1.9</version>
+	</conflicts>
 </plugin_manifest>
