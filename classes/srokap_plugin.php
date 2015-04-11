@@ -43,7 +43,7 @@ class srokap_plugin {
 	}
 	
 	static function getCommunityPageURL() {
-		return 'http://community.elgg.org/';
+		return 'https://community.elgg.org/';
 	}
 	
 	/**
@@ -73,9 +73,9 @@ class srokap_plugin {
 	 */
 	static function searchPluginProjects($options = array()) {
 // 		$mt = microtime(true);
-		$query = elgg_extract('q', $options, '%');
+		$query = elgg_extract('q', $options, '*');
 		if (!$query) {
-			$query = '%';
+			$query = '*';
 		}
 		$url = self::getCommunityPageURL().'search';
 		$url = elgg_http_add_url_query_elements($url, array(
